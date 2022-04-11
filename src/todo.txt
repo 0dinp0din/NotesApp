@@ -1,0 +1,11 @@
+TODO:
+
+- Polymorphism med en parent USER superclass, og child classes med forskjellige privs(?)
+
+Methods:
+
+- Register user ✅
+- Find existing user in database ✅
+- Remove user
+- check privs
+- limit input
