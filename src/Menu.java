@@ -1,17 +1,11 @@
 import java.sql.SQLException;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class Menu {
 
     Scanner input = new Scanner(System.in);
     UserManagement usermgmt = new UserManagement();
 
-    String[] text = {
-            "Welcome",
-            "Please select an option:",
-            "1. Create account\n2. Login"
-    };
 
     void welcome() throws SQLException {
         System.out.println("Welcome. Please select an option:\n1. Create account\n2. Login");
@@ -24,9 +18,9 @@ public class Menu {
 
         if (Objects.equals(option, "1")){
             registration();
+            login();
         } else if (Objects.equals(option, "2")){
-            System.out.println("todo");
-
+            login();
         }
     }
 
@@ -39,5 +33,25 @@ public class Menu {
         String password = input.next();
 
         usermgmt.registerUser(username, password, 100);
+    }
+
+    void login() throws SQLException {
+        boolean authenticated = false;
+        User user = null;
+        System.out.println("Type your details below to log in:");
+
+        while (user == null) {
+            System.out.print("Username: ");
+            String username = input.next();
+
+            System.out.print("Password: ");
+            String password = input.next();
+
+            user = usermgmt.login(username, password);
+            if (user != null) {
+                authenticated = true;
+            }
+        }
+        user.option();
     }
 }
