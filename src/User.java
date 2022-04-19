@@ -4,8 +4,6 @@ import java.sql.*;
 
 public class User {
     Database database = new Database();
-    String query;
-    HashMap<Integer, String> variables = new HashMap<>();
 
     public int getId() {
         return id;
@@ -29,13 +27,14 @@ public class User {
 
     public void addNote() throws SQLException{
 
-        this.query = "INSERT INTO notes(id, note_title, note_content) VALUES (?, ?, ?)";
+        String query = "INSERT INTO notes(id, note_title, note_content) VALUES (?, ?, ?)";
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("What should the title of your note be?");
         String title = scanner.next();
 
         if (!titleExists(title)) {
+            HashMap<Integer, String> variables = new HashMap<>();
             System.out.println("What is the contents of your note?");
             String content = scanner.next();
 
@@ -44,7 +43,6 @@ public class User {
             variables.put(3, content);
             database.update(variables, query);
 
-            variables.clear();
         } else if (titleExists(title)) {
             System.out.printf("A note with the title \"%s\" already exists.", title);
         } else {
@@ -53,22 +51,46 @@ public class User {
 
     }
 
-    public void removeNote() {
+    public void removeNote() throws SQLException {
+        HashMap<Integer, String> variables = new HashMap<>();
+        String query = "DELETE FROM notes WHERE id = ? AND notes_title = ?;";
+        Scanner input = new Scanner(System.in);
+        HashMap<String, String> list = listAllNotes();
+        System.out.println("Type the number of the note you would like to delete:");
+        String selection = input.next();
 
+        variables.put(1, String.valueOf(this.id));
+        variables.put(2, list.get(selection));
+
+        System.out.printf("Are you sure you want to delete \"%s\" ? (y/n)", list.get(selection));
+        String yn = input.next();
+        while (!yn.equalsIgnoreCase("y") && !yn.equalsIgnoreCase("n")) {
+            System.out.println("That was not an option.. Try again");
+            yn = input.next();
+        }
+
+        if (yn.equalsIgnoreCase("y")) {
+            database.update(variables, query);
+            System.out.printf("Note titled: %s was successfully removed..", list.get(selection));
+        }
     }
 
     public boolean titleExists(String title) throws SQLException {
-        this.query = "SELECT note_title FROM notes WHERE note_title = ?;";
-        variables.put(1, title);
-        ResultSet rs = database.fetch(variables, query);
+        HashMap<Integer, String> existsCache = new HashMap<>();
+
+        String query = "SELECT id, note_title FROM notes WHERE id = ? AND note_title = ?;";
+        existsCache.put(1, String.valueOf(this.id));
+        existsCache.put(2, title);
+        ResultSet rs = database.fetch(existsCache, query);
         return rs.next();
     }
 
     public HashMap<String, String> listAllNotes() throws SQLException {
+        HashMap<Integer, String> variables = new HashMap<>();
         int index = 0;
         HashMap<String, String> dboutput = new HashMap<>();
 
-        this.query = "SELECT note_title FROM notes WHERE id = ?;";
+        String query = "SELECT note_title FROM notes WHERE id = ?;";
         variables.put(1, String.valueOf(id));
         ResultSet result = database.fetch(variables, query);
 
@@ -83,17 +105,17 @@ public class User {
             System.out.println(index+ ". " + result.getString("note_title"));
             dboutput.put(String.valueOf(index), result.getString("note_title"));
         }
-        variables.clear();
         return dboutput;
     }
 
     public void printNote() throws SQLException {
+        HashMap<Integer, String> variables = new HashMap<>();
         Scanner input = new Scanner(System.in);
         HashMap<String, String> list = listAllNotes();
         System.out.println("Type the number of the note you would like to print:");
         String selection = input.next();
 
-        query = "SELECT note_content FROM notes WHERE id = ? AND note_title = ?;";
+        String query = "SELECT note_content FROM notes WHERE id = ? AND note_title = ?;";
         variables.put(1, String.valueOf(this.id));
         variables.put(2, list.get(selection));
         ResultSet result = database.fetch(variables, query);
@@ -122,7 +144,7 @@ public class User {
                 case "1" -> {
                     addNote();
                 }case "2" -> {
-
+                    removeNote();
                 }case "3" -> {
                     printNote();
                 }case "4" -> {
