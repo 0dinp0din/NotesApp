@@ -53,7 +53,7 @@ public class User {
 
     public void removeNote() throws SQLException {
         HashMap<Integer, String> variables = new HashMap<>();
-        String query = "DELETE FROM notes WHERE id = ? AND notes_title = ?;";
+        String query = "DELETE FROM notes WHERE id = ? AND note_title = ?;";
         Scanner input = new Scanner(System.in);
         HashMap<String, String> list = listAllNotes();
         System.out.println("Type the number of the note you would like to delete:");
@@ -95,7 +95,7 @@ public class User {
         ResultSet result = database.fetch(variables, query);
 
         if (!result.isBeforeFirst()){
-            System.out.println("You don't have any saved notes.");
+            System.out.println("You don't have any saved notes.\n");
             return null;
         }else {
             System.out.println("Your saved notes are:");
@@ -110,8 +110,12 @@ public class User {
 
     public void printNote() throws SQLException {
         HashMap<Integer, String> variables = new HashMap<>();
-        Scanner input = new Scanner(System.in);
         HashMap<String, String> list = listAllNotes();
+
+        if(list == null) {
+            return;
+        }
+        Scanner input = new Scanner(System.in);
         System.out.println("Type the number of the note you would like to print:");
         String selection = input.next();
 
