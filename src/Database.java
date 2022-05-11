@@ -16,7 +16,6 @@ public class Database {
 
     public Database() {
         Database.loadDriver();
-
         try {
             dbconnection = DriverManager.getConnection(
                     "jdbc:mysql://127.0.0.1:3306/shop?allowPublicKeyRetrieval=true&useSSL=false" +

@@ -50,7 +50,7 @@ public class UserManagement {
         if (!auth) {
             System.out.println("Wrong username or password.. Try again");
             return null;
-        } else if (auth) {
+        } else {
             System.out.printf("Welcome back %s! ", username);
 
             switch (rs.getInt("gid")) {

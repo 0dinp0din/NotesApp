@@ -31,12 +31,12 @@ public class User {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("What should the title of your note be?");
-        String title = scanner.next();
+        String title = scanner.nextLine();
 
         if (!titleExists(title)) {
             HashMap<Integer, String> variables = new HashMap<>();
             System.out.println("What is the contents of your note?");
-            String content = scanner.next();
+            String content = scanner.nextLine();
 
             variables.put(1, String.valueOf(id));
             variables.put(2, title);
@@ -57,7 +57,7 @@ public class User {
         Scanner input = new Scanner(System.in);
         HashMap<String, String> list = listAllNotes();
         System.out.println("Type the number of the note you would like to delete:");
-        String selection = input.next();
+        String selection = input.nextLine();
 
         variables.put(1, String.valueOf(this.id));
         variables.put(2, list.get(selection));
@@ -66,7 +66,7 @@ public class User {
         String yn = input.next();
         while (!yn.equalsIgnoreCase("y") && !yn.equalsIgnoreCase("n")) {
             System.out.println("That was not an option.. Try again");
-            yn = input.next();
+            yn = input.nextLine();
         }
 
         if (yn.equalsIgnoreCase("y")) {
@@ -142,7 +142,7 @@ public class User {
                         4. Exit application""");
 
             Scanner scanner = new Scanner(System.in);
-            String option = scanner.next();
+            String option = scanner.nextLine();
 
             switch (option) {
                 case "1" -> {
